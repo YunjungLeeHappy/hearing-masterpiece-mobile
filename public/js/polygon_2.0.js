@@ -129,12 +129,12 @@ function draw_polygon(mode){
 
     //polygon opacity, fill color(random)
   svg.selectAll("polygon")
-  //.style("fill-opacity", .000001)
-  //.style("stroke-width", 5)
+  .style("fill-opacity", .000001)
+  .style("stroke-width", 5)
   .style("fill-opacity", .0)
-  //.style("stroke",function() {
-  //  return "hsl(" + Math.random() * 360 + ",100%,50%)";
-  //})
+  .style("stroke",function() {
+    return "hsl(" + Math.random() * 360 + ",100%,50%)";
+  })
 
   .attr("category", function(d){
     d.name = d.name.replace('.', '');
@@ -237,12 +237,12 @@ function draw_parts(parts_list){
 
     //polygon opacity, fill color(random)
   svg.selectAll("polygon")
-  //.style("fill-opacity", .000001)
-  //.style("stroke-width", 5)
+  .style("fill-opacity", .000001)
+  .style("stroke-width", 5)
   .style("fill-opacity", .0)
-  //.style("stroke",function() {
-  //  return "hsl(" + Math.random() * 360 + ",100%,50%)";
-  //})
+  .style("stroke",function() {
+    return "hsl(" + Math.random() * 360 + ",100%,50%)";
+  })
 
   .attr("category", function(d){
     d.name = d.name.replace('.', '');
@@ -362,9 +362,9 @@ var svg = d3.select(".image").append("svg")
  if(lan == "k")
     var img_file = image_data_k;
  else
-    var image_file = image_data_m
+    var img_file = image_data_m
 
-  var img_file_name = img_file['annotation']['filename'];
+  var img_file_name = img_id+".jpg";
 
   //var objects_list = get_objects_list(img_file.annotations);
 

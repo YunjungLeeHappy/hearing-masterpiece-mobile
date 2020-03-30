@@ -75,7 +75,7 @@ else if(img_id == "grande"){
     var opt = 0.07;
 }
 else if(img_id = "2_milano"){
-    var opt = 1;
+    var opt = 0.8;
 }
 
 
