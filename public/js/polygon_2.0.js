@@ -127,6 +127,7 @@ function draw_polygon(mode){
         ;
     }
 
+
     //polygon opacity, fill color(random)
   svg.selectAll("polygon")
   //.style("fill-opacity", .000001)
@@ -136,6 +137,15 @@ function draw_polygon(mode){
   //  return "hsl(" + Math.random() * 360 + ",100%,50%)";
   //})
 
+  /*
+  svg.selectAll("polygon")
+  .style("fill-opacity", .000001)
+  .style("stroke-width", 5)
+  .style("fill-opacity", .0)
+  .style("stroke",function() {
+    return "hsl(" + Math.random() * 360 + ",100%,50%)";
+  })
+*/
   .attr("category", function(d){
     d.name = d.name.replace('.', '');
     return d.name;})
@@ -400,14 +410,24 @@ function zoomed() {
     var y_start = 1;
   }
 
+
   var image = svg.append('image')
-    .attr('xlink:href', "https://raw.githubusercontent.com/KwonNH/hearing-masterpiece-mobile/master/public/milano_image/"+img_file_name)
+  .attr('xlink:href', "https://raw.githubusercontent.com/YunjungLeeHappy/hearing-masterpiece-mobile/master/public/sample_image/2_milano.jpg")
+  .attr("x", 1)
+  .attr("y", y_start)
+  .attr('width', img_width*opt)
+  .attr('height', img_height*opt)
+  ;
+
+  /*
+  var image = svg.append('image')
+    .attr('xlink:href', "https://raw.githubusercontent.com/YunjungLeeHappy/hearing-masterpiece-mobile/master/public/milano_image/"+img_file_name)
     .attr("x", 1)
     .attr("y", y_start)
     .attr('width', img_width*opt)
     .attr('height', img_height*opt)
     ;
-
+*/
   var x = d3.scaleLinear().range([0, img_width*opt]);
   var y = d3.scaleLinear().range([0, img_height*opt]);
 

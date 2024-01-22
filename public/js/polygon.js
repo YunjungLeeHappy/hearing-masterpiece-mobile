@@ -12,10 +12,10 @@ var log_count = 0;
 var desc_mode = 0;
 
 function change_desc_mode(){
-    if(desc_mode == 0){ //default
+    if(desc_mode === 0){ //default
         return 1;
     }
-    else if(desc_mode == 1){
+    else if(desc_mode === 1){
         return 0;
     }
 }
@@ -24,7 +24,7 @@ function convertArrayOfObjectsToCSV(args) {
         var result, ctr, keys, columnDelimiter, lineDelimiter, data;
 
         data = args.data || null;
-        if (data == null || !data.length) {
+        if (data === null || !data.length) {
             return null;
         }
 
@@ -56,7 +56,7 @@ function download_csv(args) {
         var csv = convertArrayOfObjectsToCSV({
             data: log_array
         });
-        if (csv == null) return;
+        if (csv === null) return;
 
         filename = args || username+"_log.csv";
 
@@ -80,7 +80,7 @@ function collect_log(username, point_x, point_y){
 
     log_array.push(current_log);
     /*
-    if(log_array.length %10 == 0 && log_array.length >= 10){
+    if(log_array.length %10 === 0 && log_array.length >= 10){
 
         localStorage.setItem('myStorage', JSON.stringify(log_array));
 
@@ -97,7 +97,7 @@ function get_log_file(){
 
 function find_by_file_id(image_data, img_id){
     for(var i=0;i<image_data.images.length;i++){
-        if(image_data.images[i].id == img_id){
+        if(image_data.images[i].id === img_id){
             return image_data.images[i];
         }
     }
@@ -115,7 +115,7 @@ function get_objects_list(annotations){
     var counts = {};
 
     for(var i=annotations.length-1;i>=0;i--){
-        if(annotations[i].category != "배경" && annotations[i].category != "background")
+        if(annotations[i].category !== "배경" && annotations[i].category !== "background")
             objects_list.push(annotations[i].category);
     }
     objects_list = Array.from(objects_list);
@@ -130,7 +130,7 @@ function get_objects_list(annotations){
 
 function list_contains(list, elem){
     for(var i=0;i<list.length;i++){
-        if(list[i] == elem){
+        if(list[i] === elem){
             return true
         }
     }
@@ -141,7 +141,7 @@ function draw_polygon(mode){
 
     svg.selectAll("polygon").remove();
 
-    if(mode == "m" || mode == "label"){ //fine(polygon mode)
+    if(mode === "m" || mode === "label"){ //fine(polygon mode)
         img_file = image_data_m;
         d3.selectAll("polygon").remove();
         svg.selectAll("polygon")
@@ -151,7 +151,7 @@ function draw_polygon(mode){
         })
         .enter().append("polygon")
         .attr("points", function(d) {
-            if(d['deleted'] == "0"){
+            if(d['deleted'] === "0"){
 
                 return d.polygon.pt.map(function(d) {
                         //console.log(d);
@@ -159,14 +159,14 @@ function draw_polygon(mode){
         ;
     }
 
-    else if(mode == "m" && lan == "k"){ //fine(polygon mode)
+    else if(mode === "m" && lan === "k"){ //fine(polygon mode)
         img_file = image_data_k;
         d3.selectAll("polygon").remove();
         svg.selectAll("polygon")
         .data(img_file.annotation.object)
         .enter().append("polygon")
         .attr("points", function(d) {
-            if(d['deleted'] == "0"){
+            if(d['deleted'] === "0"){
 
                 return d.polygon.pt.map(function(d) {
                         //console.log(d);
@@ -174,14 +174,14 @@ function draw_polygon(mode){
         ;
     }
 
-    else if(mode == "p" && lan == "e"){ //rough(bbox mode)
+    else if(mode === "p" && lan === "e"){ //rough(bbox mode)
         img_file = image_data_p_e;
         d3.selectAll("polygon").remove();
         svg.selectAll("polygon")
         .data(img_file.annotation.object)
         .enter().append("polygon")
         .attr("points", function(d) {
-            if(d['deleted'] != "1"){
+            if(d['deleted'] !== "1"){
 
                 return d.polygon.pt.map(function(d) {
                         //console.log(d);
@@ -189,14 +189,14 @@ function draw_polygon(mode){
         ;
     }
 
-    else if(mode == "p" && lan == "k"){ //rough(bbox mode)
+    else if(mode === "p" && lan === "k"){ //rough(bbox mode)
         img_file = image_data_p;
         d3.selectAll("polygon").remove();
         svg.selectAll("polygon")
         .data(img_file.annotation.object)
         .enter().append("polygon")
         .attr("points", function(d) {
-            if(d['deleted'] != "1"){
+            if(d['deleted'] !== "1"){
 
                 return d.polygon.pt.map(function(d) {
                         //console.log(d);
@@ -209,9 +209,9 @@ function draw_polygon(mode){
   //.style("fill-opacity", .000001)
   //.style("stroke-width", 5)
   .style("fill-opacity", .0)
-  //.style("stroke",function() {
-  //  return "hsl(" + Math.random() * 360 + ",100%,50%)";
-  //})
+  .style("stroke",function() {
+    return "hsl(" + Math.random() * 360 + ",100%,50%)";
+  })
 
   .attr("category", function(d){
     d.name = d.name.replace('.', '');
@@ -220,10 +220,18 @@ function draw_polygon(mode){
         responsiveVoice.cancel();
     })
     .dblTap(function(d) {
-        if(mode == "label" && d.parts.hasparts != null){
-            mode = "parts";
-            draw_parts(d.parts.hasparts);
-        }
+        //if(mode === "label" && d.parts.hasparts !== null){
+        //    mode = "parts";
+        //    draw_parts(d.parts.hasparts);
+        //}
+          if(mode === "m"){
+                mode = "p";
+                draw_polygon(mode);
+            }
+            else {
+              mode = "m";
+              draw_polygon(mode);
+          }
     })
     .on("click", function(d){
         responsiveVoice.cancel();
@@ -232,45 +240,45 @@ function draw_polygon(mode){
     .append("svg:title")
     .text(function(d) {
         d.name = d.name.replace('.', '');
-        if(mode == "p"){ //part mode
+        if(mode === "p"){ //part mode
             return d.name + ".." + d.attributes;
         }
-        else if(mode == "m"){ //mturk mode(object mode)
+        else if(mode === "m"){ //mturk mode(object mode)
             var cat = d.name + "..";
-            if(d.remains != "" && typeof d.remains != "undefined" && attr_exp == "1"){
+            if(d.remains !== "" && typeof d.remains !== "undefined" && attr_exp === "1"){
                 cat = cat + d.remains;
             }
-            if(d.color != "" && typeof d.color != "undefined" && attr_color == "1"){
-                if(lan == "e"){
+            if(d.color !== "" && typeof d.color !== "undefined" && attr_color === "1"){
+                if(lan === "e"){
                     cat = cat + ", the color is "+d.color;
                 }
-                else if(lan == "k"){
+                else if(lan === "k"){
                      cat = cat + ", 색깔은 "+d.color;
                 }
 
             }
-            if(d.location !="" && typeof d.location != "undefined" && attr_loc == "1"){
-                if(lan == "e"){
+            if(d.location !=="" && typeof d.location !== "undefined" && attr_loc === "1"){
+                if(lan === "e"){
                     cat = cat + ", the location is " + d.location;
                 }
-                else if(lan == "k"){
+                else if(lan === "k"){
                     cat = cat + ", 위치는 " + d.location;
                 }
             }
-            if(d.size !="" && typeof d.size != "undefined" && attr_size == "1"){
-                if(lan == "e"){
+            if(d.size !=="" && typeof d.size !== "undefined" && attr_size === "1"){
+                if(lan === "e"){
                     cat = cat + ", the size is " + d.size;
                 }
-                else if(lan == "k"){
+                else if(lan === "k"){
                     cat = cat + ", 크기는 " + d.size;
                 }
             }
             return cat;
         }
-        else if(mode == "label"){ //only label of the polygon
+        else if(mode === "label"){ //only label of the polygon
             return d.name;
         }
-        else if(mode == "attr"){ //only attributes of the polygon
+        else if(mode === "attr"){ //only attributes of the polygon
             return d.attributes;
         }
      })
@@ -294,7 +302,7 @@ function draw_parts(parts_list){
         return d['id'];
     })
     .attr("points", function(d) {
-        if(d['deleted'] == "0" && list_contains(parts_list.split(','), d['id'])){
+        if(d['deleted'] === "0" && list_contains(parts_list.split(','), d['id'])){
 
             return d.polygon.pt.map(function(d) {
                     //console.log(d);
@@ -306,9 +314,9 @@ function draw_parts(parts_list){
   //.style("fill-opacity", .000001)
   //.style("stroke-width", 5)
   .style("fill-opacity", .0)
-  //.style("stroke",function() {
-  //  return "hsl(" + Math.random() * 360 + ",100%,50%)";
-  //})
+  .style("stroke",function() {
+    return "hsl(" + Math.random() * 360 + ",100%,50%)";
+  })
 
   .attr("category", function(d){
     d.name = d.name.replace('.', '');
@@ -328,77 +336,77 @@ function draw_parts(parts_list){
     .append("svg:title")
     .text(function(d) {
         d.name = d.name.replace('.', '');
-        if(mode == "p"){
+        if(mode === "p"){
             return d.name + ".." + d.attributes;
         }
-        else if(mode == "m"){
+        else if(mode === "m"){
             var cat = d.name + "..";
-            if(d.remains != "" && typeof d.remains != "undefined" && attr_exp == "1"){
+            if(d.remains !== "" && typeof d.remains !== "undefined" && attr_exp === "1"){
                 cat = cat + d.remains;
             }
-            if(d.color != "" && typeof d.color != "undefined" && attr_color == "1"){
-                if(lan == "e"){
+            if(d.color !== "" && typeof d.color !== "undefined" && attr_color === "1"){
+                if(lan === "e"){
                     cat = cat + ", the color is "+d.color;
                 }
-                else if(lan == "k"){
+                else if(lan === "k"){
                      cat = cat + ", 색깔은 "+d.color;
                 }
 
             }
-            if(d.location !="" && typeof d.location != "undefined" && attr_loc == "1"){
-                if(lan == "e"){
+            if(d.location !=="" && typeof d.location !== "undefined" && attr_loc === "1"){
+                if(lan === "e"){
                     cat = cat + ", the location is " + d.location;
                 }
-                else if(lan == "k"){
+                else if(lan === "k"){
                     cat = cat + ", 위치는 " + d.location;
                 }
             }
-            if(d.size !="" && typeof d.size != "undefined" && attr_size == "1"){
-                if(lan == "e"){
+            if(d.size !=="" && typeof d.size !== "undefined" && attr_size === "1"){
+                if(lan === "e"){
                     cat = cat + ", the size is " + d.size;
                 }
-                else if(lan == "k"){
+                else if(lan === "k"){
                     cat = cat + ", 크기는 " + d.size;
                 }
             }
             return cat;
         }
-        else if(mode == "m" && lan == "k" && typeof attr_sound == "undefined"){
+        else if(mode === "m" && lan === "k" && typeof attr_sound === "undefined"){
         /*
             var cat = d.name + "..";
-            if(d.remains != ""){
+            if(d.remains !== ""){
                 cat = cat + d.remains;
             }
-            if(d.color != ""){
+            if(d.color !== ""){
                 cat = cat + ", 색깔은 "+d.color;
             }
-            if(d.location !=""){
+            if(d.location !==""){
                 cat = cat + ", 위치는 " + d.location;
             }
             return cat;
             */
             return d.name + ".." + d.attributes;
         }
-        else if(mode == "m" && lan == "k" && attr_sound == "po"){
+        else if(mode === "m" && lan === "k" && attr_sound === "po"){
         /*
             var cat = d.name + "..";
-            if(d.remains != ""){
+            if(d.remains !== ""){
                 cat = cat + d.remains;
             }
-            if(d.color != ""){
+            if(d.color !== ""){
                 cat = cat + ", 색깔은 "+d.color;
             }
-            if(d.location !=""){
+            if(d.location !==""){
                 cat = cat + ", 위치는 " + d.location;
             }
             return cat;
             */
             return d.name;
         }
-        else if(mode == "label" || mode == "parts"){
+        else if(mode === "label" || mode === "parts"){
             return d.name;
         }
-        else if(mode == "attr"){
+        else if(mode === "attr"){
             return d.attributes;
         }
      })
@@ -429,14 +437,14 @@ var svg = d3.select(".image").append("svg")
   .attr("preserveAspectRatio", "xMinYMin meet")
   .append("g")
   .dblTap(function() {
-  if(mode == "parts"){
+  if(mode === "parts"){
             mode = "label";
             draw_polygon(mode);
         }
     });
 
  function change_mode(){
-    if(mode == "m"){
+    if(mode === "m"){
             mode = "p";
             draw_polygon(mode);
         }
@@ -447,19 +455,19 @@ var svg = d3.select(".image").append("svg")
  }
 
 
- if(attr_sound == "po"){
+ if(attr_sound === "po"){
     var mode = "p";
  }
  else{
-    //var mode = "m";
-    var mode = "label";
+    var mode = "m";
+    //var mode = "label";
  }
  var audio_flag = 0;
  var audio = null;
 
- if(lan == "e")
+ if(lan === "e")
     var img_file = image_data_m;
- else if(lan == "k")
+ else if(lan === "k")
     var img_file = image_data_k;
 
   var img_file_name = img_file['annotation']['filename'];
@@ -489,7 +497,7 @@ function zoomed() {
     y.call(d3.event.transform.rescaleY(y));
 }
 
- if(img_id == "9"){
+ if(img_id === "9"){
     var portion = 1.163;
     var y_start = -100;
   }
@@ -499,7 +507,7 @@ function zoomed() {
   }
 
   var image = svg.append('image')
-    .attr('xlink:href', "https://raw.githubusercontent.com/KwonNH/hearing-masterpiece-mobile/master/public/sample_image/"+img_file_name)
+    .attr('xlink:href', "https://raw.githubusercontent.com/YunjungLeeHappy/hearing-masterpiece-mobile/master/public/sample_image/"+img_file_name)
     .attr("x", 1)
     .attr("y", y_start)
     .attr('width', img_width*opt)
@@ -533,18 +541,18 @@ var data = //[{label: "상세설명모드", x: parseInt(img_file.width)+70, y: 3
 /*
 var button = d3.button()
     .on('press', function(d, i) {
-        if(d.label == "Voice"){
+        if(d.label === "Voice"){
             voice_flag = voice(voice_flag);
         }
-        else if(d.label == "Segmentation Mode"){
+        else if(d.label === "Segmentation Mode"){
             seg_mode = change_seg_mode(seg_mode);
             draw_polygon(seg_mode);
         }
-        else if(d.label == "Reset"){
+        else if(d.label === "Reset"){
             reset();
             this.release();
         }
-        else if(d.label == "상세설명모드"){
+        else if(d.label === "상세설명모드"){
 
             svg.selectAll("svg:title").remove();
 
@@ -553,14 +561,14 @@ var button = d3.button()
         }
     })
     .on('release', function(d, i) {
-        if(d.label == "Voice"){
+        if(d.label === "Voice"){
             voice_flag = voice(voice_flag);
         }
-        else if(d.label == "Segmentation Mode"){
+        else if(d.label === "Segmentation Mode"){
             seg_mode = change_seg_mode(seg_mode);
             draw_polygon(seg_mode);
         }
-        else if(d.label == "상세설명모드"){
+        else if(d.label === "상세설명모드"){
 
             desc_mode = change_desc_mode();
             draw_polygon();
@@ -582,17 +590,17 @@ function reset() {
 }
 
 function doc_keyUp(e) {
-    if (e.ctrlKey && e.keyCode == 86) { //enable voice (ctrl+v)
+    if (e.ctrlKey && e.keyCode === 86) { //enable voice (ctrl+v)
         voice_flag = voice(voice_flag);
     }
-    else if(e.ctrlKey && e.keyCode == 83){ //change seg mode (ctrl+s)
+    else if(e.ctrlKey && e.keyCode === 83){ //change seg mode (ctrl+s)
         seg_mode = change_seg_mode(seg_mode);
         draw_polygon(seg_mode);
     }
-    else if(e.ctrlKey && e.keyCode == 68){ //download log file (ctrl+d)
+    else if(e.ctrlKey && e.keyCode === 68){ //download log file (ctrl+d)
         get_log_file();
     }
-    else if(e.keyCode == 39){
+    else if(e.keyCode === 39){
         if(sorted_count < sorted_by_point.length-1){
             sorted_count++;
             responsiveVoice.speak(sorted_by_point[sorted_count], language);
@@ -601,7 +609,7 @@ function doc_keyUp(e) {
             responsiveVoice.speak(sorted_by_point[sorted_by_point.length-1], language);
         }
     }
-    else if(e.keyCode == 37){
+    else if(e.keyCode === 37){
         if(sorted_count > 0){
             sorted_count--;
             responsiveVoice.speak(sorted_by_point[sorted_count], language);
